@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 const getPlayer = `-- name: GetPlayer :one
@@ -14,7 +15,7 @@ SELECT id, username, score, health, ult_meter FROM player
 WHERE username = $1 LIMIT 1
 `
 
-func (q *Queries) GetPlayer(ctx context.Context, username string) (Player, error) {
+func (q *Queries) GetPlayer(ctx context.Context, username sql.NullString) (Player, error) {
 	row := q.db.QueryRowContext(ctx, getPlayer, username)
 	var i Player
 	err := row.Scan(

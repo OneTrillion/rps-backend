@@ -6,10 +6,11 @@ package db
 
 import (
 	"context"
+	"database/sql"
 )
 
 type Querier interface {
-	GetPlayer(ctx context.Context, username string) (Player, error)
+	GetPlayer(ctx context.Context, username sql.NullString) (Player, error)
 }
 
 var _ Querier = (*Queries)(nil)

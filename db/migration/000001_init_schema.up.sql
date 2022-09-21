@@ -1,6 +1,6 @@
 CREATE TABLE "player" (
   "id" bigint PRIMARY KEY,
-  "username" varchar NOT NULL,
+  "username" varchar,
   "score" int NOT NULL,
   "health" int NOT NULL DEFAULT 100,
   "ult_meter" int NOT NULL DEFAULT 0
