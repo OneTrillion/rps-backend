@@ -4,7 +4,9 @@
 
 package db
 
-import ()
+import (
+	"database/sql"
+)
 
 type Opponent struct {
 	ID     int64  `json:"id"`
@@ -13,11 +15,11 @@ type Opponent struct {
 }
 
 type Player struct {
-	ID       int64  `json:"id"`
-	Username string `json:"username"`
-	Score    int32  `json:"score"`
-	Health   int32  `json:"health"`
-	UltMeter int32  `json:"ult_meter"`
+	ID       int64          `json:"id"`
+	Username sql.NullString `json:"username"`
+	Score    int32          `json:"score"`
+	Health   int32          `json:"health"`
+	UltMeter int32          `json:"ult_meter"`
 }
 
 type Scoreboard struct {
