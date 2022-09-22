@@ -6,7 +6,7 @@ createdb:
 	sudo docker exec -it rps_db createdb --username=root --owner=root rps_db
 
 dropdb:
-	sudo docker exec -it rps dropdb rps_db
+	sudo docker exec -it rps_db dropdb rps_db
 
 migrateup:
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/rps_db?sslmode=disable" -verbose up
