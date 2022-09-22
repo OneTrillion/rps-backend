@@ -49,6 +49,31 @@ func (q *Queries) GetPlayer(ctx context.Context, username sql.NullString) (Playe
 	return i, err
 }
 
+const updatePlayerHealth = `-- name: UpdatePlayerHealth :one
+UPDATE player
+SET health = $2
+WHERE username = $1
+RETURNING id, username, score, health, ult_meter
+`
+
+type UpdatePlayerHealthParams struct {
+	Username sql.NullString `json:"username"`
+	Health   int32          `json:"health"`
+}
+
+func (q *Queries) UpdatePlayerHealth(ctx context.Context, arg UpdatePlayerHealthParams) (Player, error) {
+	row := q.db.QueryRowContext(ctx, updatePlayerHealth, arg.Username, arg.Health)
+	var i Player
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Score,
+		&i.Health,
+		&i.UltMeter,
+	)
+	return i, err
+}
+
 const updatePlayerName = `-- name: UpdatePlayerName :one
 UPDATE player
 SET username = $2
