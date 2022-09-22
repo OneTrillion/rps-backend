@@ -12,7 +12,7 @@ INSERT INTO player (
 -- name: UpdatePlayerName :one
 UPDATE player
 SET username = $2
-WHERE username = $1
+WHERE id = $1
 RETURNING *;
 
 -- name: UpdatePlayerHealth :one
