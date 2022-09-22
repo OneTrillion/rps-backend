@@ -15,3 +15,8 @@ SET username = $2
 WHERE username = $1
 RETURNING *;
 
+-- name: UpdatePlayerHealth :one
+UPDATE player
+SET health = $2
+WHERE username = $1
+RETURNING *;
