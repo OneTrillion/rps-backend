@@ -1,5 +1,5 @@
 CREATE TABLE "player" (
-  "id" bigint PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "username" varchar,
   "score" int NOT NULL DEFAULT 0,
   "health" int NOT NULL DEFAULT 100,
@@ -7,13 +7,13 @@ CREATE TABLE "player" (
 );
 
 CREATE TABLE "opponent" (
-  "id" bigint PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
   "health" int NOT NULL DEFAULT 100
 );
 
 CREATE TABLE "scoreboard" (
-  "id" bigint PRIMARY KEY,
+  "id" bigserial PRIMARY KEY,
   "player_id" bigint NOT NULL,
   "username" varchar NOT NULL,
   "score" int NOT NULL
