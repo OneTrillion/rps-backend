@@ -8,3 +8,9 @@ INSERT INTO player (
 ) VALUES (
     $1
 ) RETURNING *;
+
+-- name: UpdatePlayerName :one
+UPDATE player
+SET username = $2
+WHERE username = $1
+RETURNING *;
