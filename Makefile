@@ -1,9 +1,9 @@
 
 postgres:
-	sudo docker run --name rps -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres
+	sudo docker run --name rps_db -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres
 	
 createdb:
-	sudo docker exec -it rps createdb --username=root --owner=root rps_db
+	sudo docker exec -it rps_db createdb --username=root --owner=root rps_db
 
 dropdb:
 	sudo docker exec -it rps dropdb rps_db
