@@ -10,6 +10,7 @@ import (
 )
 
 type Querier interface {
+	AddNewScoreToScoreboard(ctx context.Context, arg AddNewScoreToScoreboardParams) (Scoreboard, error)
 	CreatePlayer(ctx context.Context, username sql.NullString) (Player, error)
 	GetPlayer(ctx context.Context, username sql.NullString) (Player, error)
 	UpdatePlayerHealth(ctx context.Context, arg UpdatePlayerHealthParams) (Player, error)
