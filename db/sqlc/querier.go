@@ -10,7 +10,9 @@ import (
 )
 
 type Querier interface {
+	CreatePlayer(ctx context.Context, username sql.NullString) (Player, error)
 	GetPlayer(ctx context.Context, username sql.NullString) (Player, error)
+	UpdatePlayerName(ctx context.Context, arg UpdatePlayerNameParams) (Player, error)
 }
 
 var _ Querier = (*Queries)(nil)

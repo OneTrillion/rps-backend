@@ -10,6 +10,27 @@ import (
 	"database/sql"
 )
 
+const createPlayer = `-- name: CreatePlayer :one
+INSERT INTO player (
+    username
+) VALUES (
+    $1
+) RETURNING id, username, score, health, ult_meter
+`
+
+func (q *Queries) CreatePlayer(ctx context.Context, username sql.NullString) (Player, error) {
+	row := q.db.QueryRowContext(ctx, createPlayer, username)
+	var i Player
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Score,
+		&i.Health,
+		&i.UltMeter,
+	)
+	return i, err
+}
+
 const getPlayer = `-- name: GetPlayer :one
 SELECT id, username, score, health, ult_meter FROM player
 WHERE username = $1 LIMIT 1
@@ -17,6 +38,31 @@ WHERE username = $1 LIMIT 1
 
 func (q *Queries) GetPlayer(ctx context.Context, username sql.NullString) (Player, error) {
 	row := q.db.QueryRowContext(ctx, getPlayer, username)
+	var i Player
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Score,
+		&i.Health,
+		&i.UltMeter,
+	)
+	return i, err
+}
+
+const updatePlayerName = `-- name: UpdatePlayerName :one
+UPDATE player
+SET username = $2
+WHERE username = $1
+RETURNING id, username, score, health, ult_meter
+`
+
+type UpdatePlayerNameParams struct {
+	Username   sql.NullString `json:"username"`
+	Username_2 sql.NullString `json:"username_2"`
+}
+
+func (q *Queries) UpdatePlayerName(ctx context.Context, arg UpdatePlayerNameParams) (Player, error) {
+	row := q.db.QueryRowContext(ctx, updatePlayerName, arg.Username, arg.Username_2)
 	var i Player
 	err := row.Scan(
 		&i.ID,
