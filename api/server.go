@@ -17,6 +17,8 @@ func NewServer(store db.Store) *Server {
 
 	//INSERT api path here example POST GET etc...
 	router.POST("/scoreboard", server.addNewScore)
+	router.POST("/player", server.createPlayer)
+	router.POST("/player/:id", server.createPlayer)
 
 	server.router = router
 	return server
