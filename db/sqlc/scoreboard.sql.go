@@ -32,3 +32,38 @@ func (q *Queries) AddNewScoreToScoreboard(ctx context.Context, arg AddNewScoreTo
 	)
 	return i, err
 }
+
+const listHigestScores = `-- name: ListHigestScores :many
+SELECT username, score 
+FROM scoreboard
+ORDER BY score DESC
+LIMIT 10
+`
+
+type ListHigestScoresRow struct {
+	Username string `json:"username"`
+	Score    int32  `json:"score"`
+}
+
+func (q *Queries) ListHigestScores(ctx context.Context) ([]ListHigestScoresRow, error) {
+	rows, err := q.db.QueryContext(ctx, listHigestScores)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListHigestScoresRow{}
+	for rows.Next() {
+		var i ListHigestScoresRow
+		if err := rows.Scan(&i.Username, &i.Score); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

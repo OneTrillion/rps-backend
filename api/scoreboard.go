@@ -35,3 +35,13 @@ func (server *Server) addNewScore(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, newScore)
 }
+
+func (server *Server) listHigestScores(ctx *gin.Context) {
+	scores, err := server.store.ListHigestScores(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, scores)
+}
