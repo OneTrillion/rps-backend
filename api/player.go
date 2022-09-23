@@ -7,6 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func (server *Server) currentPlayerId(ctx *gin.Context) (int, error) {
+	returningPlayerId, err := server.store.GetPlayerById(ctx)
+
+	var playerId int = int(returningPlayerId.(int64))
+	return playerId, err
+}
+
 func (server *Server) createPlayer(ctx *gin.Context) {
 
 	player, err := server.store.CreatePlayer(ctx, "player")
@@ -30,16 +37,14 @@ func (server *Server) updatePlayerName(ctx *gin.Context) {
 		return
 	}
 
-	returningPlayerId, err := server.store.GetPlayerById(ctx)
+	currentPlayerId, err := server.currentPlayerId(ctx)
 	if err != nil {
-
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	var playerId int = int(returningPlayerId.(int64))
 
 	arg := db.UpdatePlayerNameParams{
-		ID:       int64(playerId),
+		ID:       int64(currentPlayerId),
 		Username: req.Username,
 	}
 
@@ -51,4 +56,21 @@ func (server *Server) updatePlayerName(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, player)
+}
+
+func (server *Server) decreasePlayerHealth(ctx *gin.Context) {
+
+	arg := db.UpdatePlayerHealthParams{
+		ID:     1,
+		Health: -25,
+	}
+
+	health, err := server.store.UpdatePlayerHealth(ctx, arg)
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, health)
 }
