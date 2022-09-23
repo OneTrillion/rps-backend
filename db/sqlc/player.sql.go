@@ -59,6 +59,18 @@ func (q *Queries) GetPlayerById(ctx context.Context) (interface{}, error) {
 	return max, err
 }
 
+const getPlayerHealth = `-- name: GetPlayerHealth :one
+SELECT health FROM player
+WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) GetPlayerHealth(ctx context.Context, id int64) (int32, error) {
+	row := q.db.QueryRowContext(ctx, getPlayerHealth, id)
+	var health int32
+	err := row.Scan(&health)
+	return health, err
+}
+
 const updatePlayerHealth = `-- name: UpdatePlayerHealth :one
 UPDATE player
 SET health = $2

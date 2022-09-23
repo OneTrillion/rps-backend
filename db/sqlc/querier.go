@@ -13,6 +13,7 @@ type Querier interface {
 	CreatePlayer(ctx context.Context, username string) (Player, error)
 	GetPlayer(ctx context.Context, username string) (Player, error)
 	GetPlayerById(ctx context.Context) (interface{}, error)
+	GetPlayerHealth(ctx context.Context, id int64) (int32, error)
 	ListHigestScores(ctx context.Context) ([]ListHigestScoresRow, error)
 	UpdatePlayerHealth(ctx context.Context, arg UpdatePlayerHealthParams) (Player, error)
 	UpdatePlayerName(ctx context.Context, arg UpdatePlayerNameParams) (Player, error)
