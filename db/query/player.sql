@@ -21,6 +21,9 @@ SET health = $2
 WHERE id = $1
 RETURNING *;
 
+-- name: GetPlayerHealth :one
+SELECT health FROM player
+WHERE id = $1 LIMIT 1;
 
 -- name: GetPlayerById :one
 SELECT MAX(id) FROM player LIMIT 1;
