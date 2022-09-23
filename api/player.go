@@ -60,8 +60,7 @@ func (server *Server) updatePlayerName(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, player)
 }
 
-// Takes the current players health
-func (server *Server) getPlayerHealth(ctx *gin.Context) {
+func (server *Server) decreasePlayerHealth(ctx *gin.Context) {
 
 	// takes the current player id and checks for error
 	currentPlayerId, err := server.currentPlayerId(ctx)
@@ -77,22 +76,13 @@ func (server *Server) getPlayerHealth(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, playerHealth)
-
-}
-
-func (server *Server) decreasePlayerHealth(ctx *gin.Context) {
-
-	// takes the current player id and checks for error
-	currentPlayerId, err := server.currentPlayerId(ctx)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
+	if playerHealth == 25 {
+		// TODO lose function
 	}
 
 	arg := db.UpdatePlayerHealthParams{
 		ID:     int64(currentPlayerId),
-		Health: -25,
+		Health: playerHealth - 25,
 	}
 
 	health, err := server.store.UpdatePlayerHealth(ctx, arg)
