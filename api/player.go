@@ -94,3 +94,29 @@ func (server *Server) decreasePlayerHealth(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, health)
 }
+
+// This is for the ult power, will reset players health to 100hp
+func (server *Server) increasePlayerHealth(ctx *gin.Context) {
+
+	// takes the current player id and checks for error
+	currentPlayerId, err := server.currentPlayerId(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	arg := db.UpdatePlayerHealthParams{
+		ID:     int64(currentPlayerId),
+		Health: 100,
+	}
+
+	newHealth, err := server.store.UpdatePlayerHealth(ctx, arg)
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, newHealth)
+
+}
