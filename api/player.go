@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Will take the current players id and return it
 func (server *Server) currentPlayerId(ctx *gin.Context) (int, error) {
 	returningPlayerId, err := server.store.GetPlayerById(ctx)
 
@@ -14,6 +15,7 @@ func (server *Server) currentPlayerId(ctx *gin.Context) (int, error) {
 	return playerId, err
 }
 
+// Creates an empty player profile with the name player
 func (server *Server) createPlayer(ctx *gin.Context) {
 
 	player, err := server.store.CreatePlayer(ctx, "player")
@@ -36,7 +38,7 @@ func (server *Server) updatePlayerName(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
-
+	// takes the current player id and checks for error
 	currentPlayerId, err := server.currentPlayerId(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -58,10 +60,38 @@ func (server *Server) updatePlayerName(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, player)
 }
 
+// Takes the current players health
+func (server *Server) getPlayerHealth(ctx *gin.Context) {
+
+	// takes the current player id and checks for error
+	currentPlayerId, err := server.currentPlayerId(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	playerHealth, err := server.store.GetPlayerHealth(ctx, int64(currentPlayerId))
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, playerHealth)
+
+}
+
 func (server *Server) decreasePlayerHealth(ctx *gin.Context) {
 
+	// takes the current player id and checks for error
+	currentPlayerId, err := server.currentPlayerId(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
 	arg := db.UpdatePlayerHealthParams{
-		ID:     1,
+		ID:     int64(currentPlayerId),
 		Health: -25,
 	}
 
