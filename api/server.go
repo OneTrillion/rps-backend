@@ -16,6 +16,7 @@ func NewServer(store db.Store) *Server {
 	router := gin.Default()
 
 	//INSERT api path here example POST GET etc...
+	router.GET("/scoreboard", server.listHigestScores)
 	router.POST("/scoreboard", server.addNewScore)
 	router.POST("/player", server.createPlayer)
 	router.POST("/player/:id", server.updatePlayerName)
