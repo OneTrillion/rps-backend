@@ -20,3 +20,8 @@ UPDATE player
 SET health = $2
 WHERE username = $1
 RETURNING *;
+
+
+-- name: GetPlayerById :one
+SELECT MAX(id) FROM player LIMIT 1;
+

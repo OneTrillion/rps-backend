@@ -7,7 +7,6 @@ package db
 
 import (
 	"context"
-	"database/sql"
 )
 
 const createPlayer = `-- name: CreatePlayer :one
@@ -18,7 +17,7 @@ INSERT INTO player (
 ) RETURNING id, username, score, health, ult_meter
 `
 
-func (q *Queries) CreatePlayer(ctx context.Context, username sql.NullString) (Player, error) {
+func (q *Queries) CreatePlayer(ctx context.Context, username string) (Player, error) {
 	row := q.db.QueryRowContext(ctx, createPlayer, username)
 	var i Player
 	err := row.Scan(
@@ -36,7 +35,7 @@ SELECT id, username, score, health, ult_meter FROM player
 WHERE username = $1 LIMIT 1
 `
 
-func (q *Queries) GetPlayer(ctx context.Context, username sql.NullString) (Player, error) {
+func (q *Queries) GetPlayer(ctx context.Context, username string) (Player, error) {
 	row := q.db.QueryRowContext(ctx, getPlayer, username)
 	var i Player
 	err := row.Scan(
@@ -49,6 +48,17 @@ func (q *Queries) GetPlayer(ctx context.Context, username sql.NullString) (Playe
 	return i, err
 }
 
+const getPlayerById = `-- name: GetPlayerById :one
+SELECT MAX(id) FROM player LIMIT 1
+`
+
+func (q *Queries) GetPlayerById(ctx context.Context) (interface{}, error) {
+	row := q.db.QueryRowContext(ctx, getPlayerById)
+	var max interface{}
+	err := row.Scan(&max)
+	return max, err
+}
+
 const updatePlayerHealth = `-- name: UpdatePlayerHealth :one
 UPDATE player
 SET health = $2
@@ -57,8 +67,8 @@ RETURNING id, username, score, health, ult_meter
 `
 
 type UpdatePlayerHealthParams struct {
-	Username sql.NullString `json:"username"`
-	Health   int32          `json:"health"`
+	Username string `json:"username"`
+	Health   int32  `json:"health"`
 }
 
 func (q *Queries) UpdatePlayerHealth(ctx context.Context, arg UpdatePlayerHealthParams) (Player, error) {
@@ -82,8 +92,8 @@ RETURNING id, username, score, health, ult_meter
 `
 
 type UpdatePlayerNameParams struct {
-	ID       int64          `json:"id"`
-	Username sql.NullString `json:"username"`
+	ID       int64  `json:"id"`
+	Username string `json:"username"`
 }
 
 func (q *Queries) UpdatePlayerName(ctx context.Context, arg UpdatePlayerNameParams) (Player, error) {
