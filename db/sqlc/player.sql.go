@@ -71,6 +71,18 @@ func (q *Queries) GetPlayerHealth(ctx context.Context, id int64) (int32, error) 
 	return health, err
 }
 
+const getPlayersUlt = `-- name: GetPlayersUlt :one
+SELECT ult_meter FROM player
+WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) GetPlayersUlt(ctx context.Context, id int64) (int32, error) {
+	row := q.db.QueryRowContext(ctx, getPlayersUlt, id)
+	var ult_meter int32
+	err := row.Scan(&ult_meter)
+	return ult_meter, err
+}
+
 const updatePlayerHealth = `-- name: UpdatePlayerHealth :one
 UPDATE player
 SET health = $2
@@ -110,6 +122,31 @@ type UpdatePlayerNameParams struct {
 
 func (q *Queries) UpdatePlayerName(ctx context.Context, arg UpdatePlayerNameParams) (Player, error) {
 	row := q.db.QueryRowContext(ctx, updatePlayerName, arg.ID, arg.Username)
+	var i Player
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Score,
+		&i.Health,
+		&i.UltMeter,
+	)
+	return i, err
+}
+
+const updatePlayersUlt = `-- name: UpdatePlayersUlt :one
+UPDATE player
+SET ult_meter = $2
+WHERE id = $1
+RETURNING id, username, score, health, ult_meter
+`
+
+type UpdatePlayersUltParams struct {
+	ID       int64 `json:"id"`
+	UltMeter int32 `json:"ult_meter"`
+}
+
+func (q *Queries) UpdatePlayersUlt(ctx context.Context, arg UpdatePlayersUltParams) (Player, error) {
+	row := q.db.QueryRowContext(ctx, updatePlayersUlt, arg.ID, arg.UltMeter)
 	var i Player
 	err := row.Scan(
 		&i.ID,
