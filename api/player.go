@@ -157,3 +157,26 @@ func (server *Server) increasePlayerUltMeter(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, newUltMeter)
 
 }
+
+func (server *Server) resetUltMeter(ctx *gin.Context) {
+	// takes the current player id and checks for error
+	currentPlayerId, err := server.currentPlayerId(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	arg := db.UpdatePlayersUltParams{
+		ID:       int64(currentPlayerId),
+		UltMeter: 0,
+	}
+
+	reseter, err := server.store.UpdatePlayersUlt(ctx, arg)
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, reseter)
+}
