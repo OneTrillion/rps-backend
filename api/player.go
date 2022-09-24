@@ -120,3 +120,40 @@ func (server *Server) increasePlayerHealth(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, newHealth)
 
 }
+
+// Will increase the players ult bar every time the player wins
+func (server *Server) increasePlayerUltMeter(ctx *gin.Context) {
+
+	// takes the current player id and checks for error
+	currentPlayerId, err := server.currentPlayerId(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	playerUlt, err := server.store.GetPlayersUlt(ctx, int64(currentPlayerId))
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	if playerUlt == 100 {
+		// Function that will tell ult is already 100%
+	}
+
+	arg := db.UpdatePlayersUltParams{
+		ID:       int64(currentPlayerId),
+		UltMeter: playerUlt + 25,
+	}
+
+	newUltMeter, err := server.store.UpdatePlayersUlt(ctx, arg)
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, newUltMeter)
+
+}

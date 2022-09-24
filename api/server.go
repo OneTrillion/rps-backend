@@ -22,6 +22,7 @@ func NewServer(store db.Store) *Server {
 	router.POST("/player/:id", server.updatePlayerName)
 	router.POST("/health", server.decreasePlayerHealth)
 	router.POST("/health/ult", server.increasePlayerHealth)
+	router.POST("/health/increase/ult", server.increasePlayerUltMeter)
 
 	server.router = router
 	return server
