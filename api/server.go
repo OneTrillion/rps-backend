@@ -24,6 +24,7 @@ func NewServer(store db.Store) *Server {
 	// PLAYER FUNCTIONS
 	router.POST("/player", server.createPlayer)
 	router.POST("/player/:id", server.updatePlayerName)
+	router.GET("/score", server.getScore)
 
 	// HEALTH FUNCTIONS
 	router.GET("/get/health", server.getPlayerHealth)

@@ -71,6 +71,18 @@ func (q *Queries) GetPlayerHealth(ctx context.Context, id int64) (int32, error) 
 	return health, err
 }
 
+const getPlayerScore = `-- name: GetPlayerScore :one
+SELECT score FROM player
+WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) GetPlayerScore(ctx context.Context, id int64) (int32, error) {
+	row := q.db.QueryRowContext(ctx, getPlayerScore, id)
+	var score int32
+	err := row.Scan(&score)
+	return score, err
+}
+
 const getPlayersUlt = `-- name: GetPlayersUlt :one
 SELECT ult_meter FROM player
 WHERE id = $1 LIMIT 1
