@@ -60,6 +60,25 @@ func (server *Server) updatePlayerName(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, player)
 }
 
+func (server *Server) getPlayerHealth(ctx *gin.Context) {
+	// takes the current player id and checks for error
+	currentPlayerId, err := server.currentPlayerId(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	playerHealth, err := server.store.GetPlayerHealth(ctx, int64(currentPlayerId))
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, playerHealth)
+
+}
+
 func (server *Server) decreasePlayerHealth(ctx *gin.Context) {
 
 	// takes the current player id and checks for error
