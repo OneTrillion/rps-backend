@@ -219,3 +219,21 @@ func (server *Server) resetUltMeter(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, reseter)
 }
+
+func (server *Server) getScore(ctx *gin.Context) {
+	// takes the current player id and checks for error
+	currentPlayerId, err := server.currentPlayerId(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	score, err := server.store.GetPlayerScore(ctx, int64(currentPlayerId))
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, score)
+}

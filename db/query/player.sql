@@ -38,3 +38,7 @@ RETURNING *;
 SELECT ult_meter FROM player
 WHERE id = $1 LIMIT 1;
 
+
+-- name: GetPlayerScore :one
+SELECT score FROM player
+WHERE id = $1 LIMIT 1;
