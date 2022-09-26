@@ -237,3 +237,22 @@ func (server *Server) getScore(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, score)
 }
+
+func (server *Server) updateScore(ctx *gin.Context) {
+
+	// takes the current player id and checks for error
+	currentPlayerId, err := server.currentPlayerId(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	updateScore, err := server.store.UpdateScore(ctx, int64(currentPlayerId))
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, updateScore)
+}

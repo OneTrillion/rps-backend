@@ -20,6 +20,7 @@ type Querier interface {
 	UpdatePlayerHealth(ctx context.Context, arg UpdatePlayerHealthParams) (Player, error)
 	UpdatePlayerName(ctx context.Context, arg UpdatePlayerNameParams) (Player, error)
 	UpdatePlayersUlt(ctx context.Context, arg UpdatePlayersUltParams) (Player, error)
+	UpdateScore(ctx context.Context, id int64) (Player, error)
 }
 
 var _ Querier = (*Queries)(nil)
