@@ -169,3 +169,23 @@ func (q *Queries) UpdatePlayersUlt(ctx context.Context, arg UpdatePlayersUltPara
 	)
 	return i, err
 }
+
+const updateScore = `-- name: UpdateScore :one
+UPDATE player
+SET score = score + 1
+WHERE id = $1
+RETURNING id, username, score, health, ult_meter
+`
+
+func (q *Queries) UpdateScore(ctx context.Context, id int64) (Player, error) {
+	row := q.db.QueryRowContext(ctx, updateScore, id)
+	var i Player
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Score,
+		&i.Health,
+		&i.UltMeter,
+	)
+	return i, err
+}

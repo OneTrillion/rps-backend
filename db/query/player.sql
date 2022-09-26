@@ -42,3 +42,9 @@ WHERE id = $1 LIMIT 1;
 -- name: GetPlayerScore :one
 SELECT score FROM player
 WHERE id = $1 LIMIT 1;
+
+-- name: UpdateScore :one
+UPDATE player
+SET score = score + 1
+WHERE id = $1
+RETURNING *;
