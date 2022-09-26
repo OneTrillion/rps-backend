@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	db "rps-backend/db/sqlc"
 
@@ -177,8 +178,11 @@ func (server *Server) increasePlayerUltMeter(ctx *gin.Context) {
 		return
 	}
 
-	if playerUlt == 100 {
+	if playerUlt >= 100 {
 		// Function that will tell ult is already 100%
+		err := fmt.Errorf("ult is full")
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
 	}
 
 	arg := db.UpdatePlayersUltParams{
@@ -216,6 +220,10 @@ func (server *Server) resetUltMeter(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
+
+	// SET HEALTH TO 100% resetPlayerHealth function
+
+	server.resetPlayerHealth(ctx)
 
 	ctx.JSON(http.StatusOK, reseter)
 }
