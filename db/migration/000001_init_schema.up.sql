@@ -19,4 +19,11 @@ CREATE TABLE "scoreboard" (
   "score" int NOT NULL
 );
 
+CREATE TABLE "choice" (
+  "id" bigserial PRIMARY KEY,
+  "player_id" bigint NOT NULL,
+  "rps_choice" int NOT NULL
+);
+
 ALTER TABLE "scoreboard" ADD FOREIGN KEY ("player_id") REFERENCES "player" ("id");
+ALTER TABLE "choice" ADD FOREIGN KEY ("player_id") REFERENCES "player" ("id");

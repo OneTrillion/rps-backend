@@ -6,6 +6,12 @@ package db
 
 import ()
 
+type Choice struct {
+	ID        int64 `json:"id"`
+	PlayerID  int64 `json:"player_id"`
+	RpsChoice int32 `json:"rps_choice"`
+}
+
 type Opponent struct {
 	ID     int64  `json:"id"`
 	Name   string `json:"name"`
