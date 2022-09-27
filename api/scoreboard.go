@@ -7,24 +7,34 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type addNewScoreRequest struct {
-	PlayerID int64  `json:"player_id" binding:"required"`
-	Username string `json:"username" binding:"required"`
-	Score    int32  `json:"score" binding:"required"`
-}
-
 func (server *Server) addNewScore(ctx *gin.Context) {
-	var req addNewScoreRequest
 
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
+	// Takes the players id
+	currentPlayerId, err := server.store.GetPlayerById(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
+
+	// Convert currentPlayerId from interface to int
+	var i interface{} = currentPlayerId
+	id := i.(int64)
+
+	// Take username with the id
+	username, err := server.store.GetUsername(ctx, id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
+
+	// Takes players score with the id
+	score, err := server.store.GetPlayerScore(ctx, id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 	}
 
 	arg := db.AddNewScoreToScoreboardParams{
-		PlayerID: req.PlayerID,
-		Username: req.Username,
-		Score:    req.Score,
+		PlayerID: id,
+		Username: username,
+		Score:    score,
 	}
 
 	newScore, err := server.store.AddNewScoreToScoreboard(ctx, arg)
