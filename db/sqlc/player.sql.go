@@ -95,6 +95,18 @@ func (q *Queries) GetPlayersUlt(ctx context.Context, id int64) (int32, error) {
 	return ult_meter, err
 }
 
+const getUsername = `-- name: GetUsername :one
+SELECT username FROM player
+WHERE id = $1 LIMIT 1
+`
+
+func (q *Queries) GetUsername(ctx context.Context, id int64) (string, error) {
+	row := q.db.QueryRowContext(ctx, getUsername, id)
+	var username string
+	err := row.Scan(&username)
+	return username, err
+}
+
 const updatePlayerHealth = `-- name: UpdatePlayerHealth :one
 UPDATE player
 SET health = $2
