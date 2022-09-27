@@ -48,3 +48,7 @@ UPDATE player
 SET score = score + 1
 WHERE id = $1
 RETURNING *;
+
+-- name: GetUsername :one
+SELECT username FROM player
+WHERE id = $1 LIMIT 1;
