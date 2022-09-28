@@ -19,6 +19,7 @@ func NewServer(store db.Store) *Server {
 
 	// GAME FUNCTIONS
 	router.POST("/game/:rps_choice", server.addNewRpsChoice)
+	router.GET("/status", server.ifLost)
 
 	// SCOREBOARD FUNCTIONS
 	router.POST("/scoreboard", server.addNewScore)
@@ -26,10 +27,12 @@ func NewServer(store db.Store) *Server {
 
 	// PLAYER FUNCTIONS
 	router.POST("/player", server.createPlayer)
-	router.POST("/player/:id", server.updatePlayerName)
 	router.GET("/score", server.getScore)
 	router.PUT("/add/score", server.updateScore)
 	router.GET("/get/username", server.getUsername)
+
+	// POST PLAYER TO SCOREBOARD AND ADD NAME
+	router.POST("finalize", server.finalizeGame)
 
 	// HEALTH FUNCTIONS
 	router.GET("/get/health", server.getPlayerHealth)

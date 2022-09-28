@@ -9,7 +9,7 @@ INSERT INTO player (
     $1
 ) RETURNING *;
 
--- name: UpdatePlayerName :one
+-- name: FinalizeGame :one
 UPDATE player
 SET username = $2
 WHERE id = $1

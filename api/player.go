@@ -28,12 +28,12 @@ func (server *Server) createPlayer(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, player)
 }
 
-type updatePlayerNameRequest struct {
+type finalizeGameRequest struct {
 	Username string `json:"username" binding:"required,alphanum"`
 }
 
-func (server *Server) updatePlayerName(ctx *gin.Context) {
-	var req updatePlayerNameRequest
+func (server *Server) finalizeGame(ctx *gin.Context) {
+	var req finalizeGameRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
@@ -46,19 +46,19 @@ func (server *Server) updatePlayerName(ctx *gin.Context) {
 		return
 	}
 
-	arg := db.UpdatePlayerNameParams{
+	arg := db.FinalizeGameParams{
 		ID:       int64(currentPlayerId),
 		Username: req.Username,
 	}
 
-	player, err := server.store.UpdatePlayerName(ctx, arg)
+	_, err = server.store.FinalizeGame(ctx, arg)
 	if err != nil {
 
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, player)
+	server.addNewScore(ctx)
 }
 
 func (server *Server) getPlayerHealth(ctx *gin.Context) {
@@ -94,10 +94,6 @@ func (server *Server) decreasePlayerHealth(ctx *gin.Context) {
 
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
-	}
-
-	if playerHealth == 25 {
-		// TODO lose function
 	}
 
 	arg := db.UpdatePlayerHealthParams{

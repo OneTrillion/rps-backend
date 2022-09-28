@@ -30,6 +30,31 @@ func (q *Queries) CreatePlayer(ctx context.Context, username string) (Player, er
 	return i, err
 }
 
+const finalizeGame = `-- name: FinalizeGame :one
+UPDATE player
+SET username = $2
+WHERE id = $1
+RETURNING id, username, score, health, ult_meter
+`
+
+type FinalizeGameParams struct {
+	ID       int64  `json:"id"`
+	Username string `json:"username"`
+}
+
+func (q *Queries) FinalizeGame(ctx context.Context, arg FinalizeGameParams) (Player, error) {
+	row := q.db.QueryRowContext(ctx, finalizeGame, arg.ID, arg.Username)
+	var i Player
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Score,
+		&i.Health,
+		&i.UltMeter,
+	)
+	return i, err
+}
+
 const getPlayer = `-- name: GetPlayer :one
 SELECT id, username, score, health, ult_meter FROM player
 WHERE username = $1 LIMIT 1
@@ -121,31 +146,6 @@ type UpdatePlayerHealthParams struct {
 
 func (q *Queries) UpdatePlayerHealth(ctx context.Context, arg UpdatePlayerHealthParams) (Player, error) {
 	row := q.db.QueryRowContext(ctx, updatePlayerHealth, arg.ID, arg.Health)
-	var i Player
-	err := row.Scan(
-		&i.ID,
-		&i.Username,
-		&i.Score,
-		&i.Health,
-		&i.UltMeter,
-	)
-	return i, err
-}
-
-const updatePlayerName = `-- name: UpdatePlayerName :one
-UPDATE player
-SET username = $2
-WHERE id = $1
-RETURNING id, username, score, health, ult_meter
-`
-
-type UpdatePlayerNameParams struct {
-	ID       int64  `json:"id"`
-	Username string `json:"username"`
-}
-
-func (q *Queries) UpdatePlayerName(ctx context.Context, arg UpdatePlayerNameParams) (Player, error) {
-	row := q.db.QueryRowContext(ctx, updatePlayerName, arg.ID, arg.Username)
 	var i Player
 	err := row.Scan(
 		&i.ID,

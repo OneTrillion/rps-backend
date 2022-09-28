@@ -12,6 +12,7 @@ type Querier interface {
 	AddNewRpsChoice(ctx context.Context, arg AddNewRpsChoiceParams) (Choice, error)
 	AddNewScoreToScoreboard(ctx context.Context, arg AddNewScoreToScoreboardParams) (Scoreboard, error)
 	CreatePlayer(ctx context.Context, username string) (Player, error)
+	FinalizeGame(ctx context.Context, arg FinalizeGameParams) (Player, error)
 	GetPlayer(ctx context.Context, username string) (Player, error)
 	GetPlayerById(ctx context.Context) (interface{}, error)
 	GetPlayerChoice(ctx context.Context, playerID int64) (int32, error)
@@ -21,7 +22,6 @@ type Querier interface {
 	GetUsername(ctx context.Context, id int64) (string, error)
 	ListHigestScores(ctx context.Context) ([]ListHigestScoresRow, error)
 	UpdatePlayerHealth(ctx context.Context, arg UpdatePlayerHealthParams) (Player, error)
-	UpdatePlayerName(ctx context.Context, arg UpdatePlayerNameParams) (Player, error)
 	UpdatePlayersUlt(ctx context.Context, arg UpdatePlayersUltParams) (Player, error)
 	UpdateScore(ctx context.Context, id int64) (Player, error)
 }

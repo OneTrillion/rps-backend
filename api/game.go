@@ -21,6 +21,7 @@ func (server *Server) addNewRpsChoice(ctx *gin.Context) {
 	currentPlayerId, err := server.store.GetPlayerById(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
 
 	var i interface{} = currentPlayerId
@@ -34,7 +35,34 @@ func (server *Server) addNewRpsChoice(ctx *gin.Context) {
 	choice, err := server.store.AddNewRpsChoice(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
 
 	ctx.JSON(http.StatusOK, choice)
+}
+
+// Will check if player has lost, if lost = true
+func (server *Server) ifLost(ctx *gin.Context) {
+
+	// Update frontend with Health
+
+	currentPlayerId, err := server.store.GetPlayerById(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+	}
+
+	var i interface{} = currentPlayerId
+	id := i.(int64)
+
+	health, err := server.store.GetPlayerHealth(ctx, id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	if health == 0 {
+		ctx.JSON(http.StatusOK, true)
+		return
+	}
+	ctx.JSON(http.StatusOK, false)
+
 }
