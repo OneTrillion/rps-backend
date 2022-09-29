@@ -1,18 +1,19 @@
--- CreateOpponent :one
+-- name: CreateOpponent :one
 INSERT INTO opponent (
     opponent_name
 ) VALUES (
     $1
 ) RETURNING *;
 
--- GetOpponentHealth :one
+-- name: GetOpponentHealth :one
 SELECT health 
 FROM opponent
-WHERE MAX (id) LIMIT 1;
+WHERE MAX (id) 
+LIMIT 1;
 
--- DecreaseOpponentHealth :one
+-- name: DecreaseOpponentHealth :one
 UPDATE opponent 
 SET health = health - 25
 WHERE MAX (id) 
-RETURNING *;
+RETURNING health;
 
