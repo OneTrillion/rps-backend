@@ -31,8 +31,11 @@ func NewServer(store db.Store) *Server {
 	router.PUT("/add/score", server.updateScore)
 	router.GET("/get/username", server.getUsername)
 
+	// OPPONENT FUNCTIONS
+	router.POST("/opponent", server.createOpponent)
+
 	// POST PLAYER TO SCOREBOARD AND ADD NAME
-	router.POST("finalize", server.finalizeGame)
+	router.POST("/finalize", server.finalizeGame)
 
 	// HEALTH FUNCTIONS
 	router.GET("/get/health", server.getPlayerHealth)

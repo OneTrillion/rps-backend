@@ -6,16 +6,16 @@ package db
 
 import ()
 
-type Choice struct {
+type Game struct {
 	ID        int64 `json:"id"`
 	PlayerID  int64 `json:"player_id"`
 	RpsChoice int32 `json:"rps_choice"`
 }
 
 type Opponent struct {
-	ID     int64  `json:"id"`
-	Name   string `json:"name"`
-	Health int32  `json:"health"`
+	ID           int64  `json:"id"`
+	OpponentName string `json:"opponent_name"`
+	Health       int32  `json:"health"`
 }
 
 type Player struct {
