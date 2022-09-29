@@ -12,8 +12,10 @@ import (
 // Start new game, create new player, start timer
 func (server *Server) startGame(ctx *gin.Context) {
 
+	// Create new opponent
+	server.createOpponent(ctx)
+
 	// Create new player
-	// function does not need to return JSON
 	server.createPlayer(ctx)
 
 	// Start timer
@@ -77,7 +79,8 @@ func (server *Server) compareChoices(ctx *gin.Context) {
 		// Add point to ult
 		server.increasePlayerUltMeter(ctx)
 		// Deal damage to computer
-
+		server.decreaseOpponentsHealth(ctx)
+		server.getOpponentsHealth(ctx)
 		// New round
 
 	} else {
