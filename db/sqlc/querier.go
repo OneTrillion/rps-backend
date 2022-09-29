@@ -9,13 +9,13 @@ import (
 )
 
 type Querier interface {
-	AddNewRpsChoice(ctx context.Context, arg AddNewRpsChoiceParams) (Choice, error)
+	AddNewRpsChoice(ctx context.Context, arg AddNewRpsChoiceParams) (Game, error)
 	AddNewScoreToScoreboard(ctx context.Context, arg AddNewScoreToScoreboardParams) (Scoreboard, error)
 	CreatePlayer(ctx context.Context, username string) (Player, error)
 	FinalizeGame(ctx context.Context, arg FinalizeGameParams) (Player, error)
 	GetPlayer(ctx context.Context, username string) (Player, error)
 	GetPlayerById(ctx context.Context) (interface{}, error)
-	GetPlayerChoice(ctx context.Context, playerID int64) (int32, error)
+	GetPlayerChoice(ctx context.Context) (int32, error)
 	GetPlayerHealth(ctx context.Context, id int64) (int32, error)
 	GetPlayerScore(ctx context.Context, id int64) (int32, error)
 	GetPlayersUlt(ctx context.Context, id int64) (int32, error)
