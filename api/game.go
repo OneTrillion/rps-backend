@@ -68,7 +68,8 @@ func (server *Server) compareChoices(ctx *gin.Context) {
 
 	if choice == computerChoice {
 		// New round
-		ctx.JSON(http.StatusOK, "Same choice")
+		ctx.JSON(http.StatusOK, "Same")
+		return
 	}
 
 	// Win
@@ -76,21 +77,27 @@ func (server *Server) compareChoices(ctx *gin.Context) {
 		(choice == 2 && computerChoice == 1) ||
 		(choice == 3 && computerChoice == 2) {
 
-		// Add point to ult
-		server.increasePlayerUltMeter(ctx)
-		// Deal damage to computer
-		server.decreaseOpponentsHealth(ctx)
-		server.getOpponentsHealth(ctx)
-		// New round
+		server.winRound(ctx)
 
+		ctx.JSON(http.StatusOK, "Win")
+		return
 	} else {
 
 		// Take damage
 		server.decreasePlayerHealth(ctx)
 
-		// New round
-
+		ctx.JSON(http.StatusOK, "Loss")
+		return
 	}
+
+}
+
+func (server *Server) winRound(ctx *gin.Context) {
+	// Add point to ult
+	server.increasePlayerUltMeter(ctx)
+	// Deal damage to computer
+	server.decreaseOpponentsHealth(ctx)
+	server.getOpponentsHealth(ctx)
 
 }
 
