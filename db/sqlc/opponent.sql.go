@@ -27,7 +27,9 @@ func (q *Queries) CreateOpponent(ctx context.Context, opponentName string) (Oppo
 const decreaseOpponentHealth = `-- name: DecreaseOpponentHealth :one
 UPDATE opponent 
 SET health = health - 25
-WHERE MAX (id) 
+WHERE id=(
+    SELECT max(id) FROM opponent
+    )
 RETURNING health
 `
 
