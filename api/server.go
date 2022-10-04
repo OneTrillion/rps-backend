@@ -27,6 +27,9 @@ func NewServer(store db.Store) *Server {
 	// GAME FUNCTIONS
 	router.POST("/game/:rps_choice", server.addNewRpsChoice)
 	router.GET("/status", server.ifLost)
+	router.GET("/win/round", server.winRound)
+	router.GET("/compare/choices", server.compareChoices)
+	
 
 	// SCOREBOARD FUNCTIONS
 	router.POST("/scoreboard", server.addNewScore)
