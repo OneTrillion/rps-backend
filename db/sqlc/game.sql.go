@@ -28,8 +28,10 @@ func (q *Queries) AddNewRpsChoice(ctx context.Context, arg AddNewRpsChoiceParams
 
 const getPlayerChoice = `-- name: GetPlayerChoice :one
 SELECT rps_choice 
-FROM game 
-WHERE MAX (id)
+FROM game
+WHERE id=(
+    SELECT max(id) FROM game
+    )
 LIMIT 1
 `
 
