@@ -6,9 +6,11 @@ INSERT INTO opponent (
 ) RETURNING *;
 
 -- name: GetOpponentHealth :one
-SELECT health 
-FROM opponent
-WHERE MAX (id) 
+SELECT health
+FROM opponent 
+WHERE id=(
+    SELECT max(id) FROM opponent
+    )
 LIMIT 1;
 
 -- name: DecreaseOpponentHealth :one
