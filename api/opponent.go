@@ -35,6 +35,7 @@ func (server *Server) getOpponentsHealth(ctx *gin.Context) {
 		server.updateScore(ctx)
 	}
 
+	ctx.JSON(http.StatusOK, health)
 }
 
 func (server *Server) decreaseOpponentsHealth(ctx *gin.Context) {

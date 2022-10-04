@@ -39,9 +39,11 @@ func (q *Queries) DecreaseOpponentHealth(ctx context.Context) (int32, error) {
 }
 
 const getOpponentHealth = `-- name: GetOpponentHealth :one
-SELECT health 
-FROM opponent
-WHERE MAX (id) 
+SELECT health
+FROM opponent 
+WHERE id=(
+    SELECT max(id) FROM opponent
+    )
 LIMIT 1
 `
 
